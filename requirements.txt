@@ -1,0 +1,14 @@
+module required = pyttsx3  [pyttsx3 is a text-to-speech conversion library in Python. Unlike alternative libraries, it
+works offline, and is compatible with both Python 2 and 3.]
+
+The pyttsx3 module supports two voices first is female and the second is male which is provided by “sapi5” for windows.
+It supports three TTS engines :  sapi5 – SAPI5 on Windows
+
+module require = python speech recognition
+
+module require =  datetime
+
+module require = opencv to open camera and other   *** Camera not woring  ***
+
+module require = pywhatkit for sending message through whatsapp
+
