@@ -3,13 +3,16 @@ import speech_recognition as sr
 import datetime
 import os
 # import cv2
-# import random
+import random
 from requests import get
 import wikipedia
 import webbrowser
 import pywhatkit as kit
 import smtplib
 import sys
+import time
+import pyjokes
+import pyautogui
 
 # provides an engine for speech function which helps in text to vice convertion
 # init function to get an engine instance for the speech synthesis
@@ -48,13 +51,14 @@ def takecommnad():
 # Defining Wishme Function - This Function will make your Jarvis wish you according to system time.
 def wishme():
     hour = int(datetime.datetime.now().hour)  # this give you the current time
+    mint = int(datetime.datetime.now().minute)
 
     if 0 <= hour <= 12:
-        speak("Good morning BOSS")
+        speak(f"Good morning BOSS. It's {hour}:{mint} A.M.")
     elif 12 < hour <= 18:
-        speak("Good afternoon BOSS")
+        speak(f"Good afternoon BOSS. It's {hour}:{mint} P.M.")
     else:
-        speak("Good evening BOSS")
+        speak(f"Good evening BOSS. It's {hour}:{mint} P.M.")
     speak("I'm JARVIS, What can i do for you today?")
 
 
@@ -68,6 +72,25 @@ def sendEmail(to, msg):
     server.close()
 
 
+# fetching news from api function
+def news():
+    main_url = "http://newsapi.org/v2/top-headlines?sources=techcrunch&apikey=dcf65e7767b840e9ac05872481553980"
+    # we request all data from main_url and then convert it into json format and storing it in a variable
+    main_page = get(main_url).json()
+    # getting articals from all data in main_page
+    articals = main_page['articles']
+    # an empty list where we append the titles of all the articals in the articals
+    head = []
+    days = ['first','second','third','fourth','fifth','sixth','seventh','eigth','ninth','tenth']
+    # pushing all articals inside head list
+    for artical in articals:
+        head.append(artical['title'])
+    # getting all titles from head and speaking it
+    for i in range(len(days)):
+        speak(f"todays {days[i]} news is {head[i]}")  
+
+
+
 if __name__ == '__main__':
     wishme()
     # takecommnad()
@@ -79,16 +102,27 @@ if __name__ == '__main__':
         query = takecommnad().lower()
 
         # logic building
+        # to open notepad
         if "open notepad" in query:
             npath = "C:\\Windows\\system32\\notepad.exe"
             os.startfile(npath)
+
+        # to close notepad
+        elif "close notepad" in query:
+            speak("Okay Sir, closing notepad")
+            os.system("taskkill /f /im notepad.exe")
 
         elif "open microsoft teams" in query:
             npath = "C:\\Users\\Sony\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Microsoft Teams"
             os.startfile(npath)
 
+        # to  open cmd
         elif "open cmd" in query:
             os.system("start cmd")
+
+        # to close cmd
+        elif "close cmd" in query:
+            os.system("taskkill /f /im cmd.exe")
 
         # opening camera with open cv
         # elif "open camera" in query:
@@ -135,6 +169,7 @@ if __name__ == '__main__':
             speak(f"Sir, your IP is {ip}")
 
         # searching on wikipedia
+        # the way you have to say to search on wikipedia """ what is python according to wikipedia """
         elif "wikipedia" in query:
             speak("Searching Wikipedia....")
             # taking query from user of what to search
@@ -197,9 +232,47 @@ if __name__ == '__main__':
                 print(e)
                 speak("sorry sir, not able to send message")
 
+        # to set an alarm
+        elif "set alarm" in query:
+            nm = int(datetime.datetime.now().hour)
+            if nm == 22:
+                music_dir = "D:\\8D"
+                # all the music file will be conveted into list
+                songs = os.listdir(music_dir)
+                # for playing songs int the list at random
+                rd = random.choice(songs)
+                os.startfile(os.path.join(music_dir, rd))
+
+        # to find jokes
+        elif "make me laugh" in query:
+            joke = pyjokes.get_joke()
+            speak(joke)
+
         # terminating the Ai
-        elif "no thanks" in query:
-            speak("Ok sir, call me up again if you want naythng from me")
+        elif "you can sleep" in query:
+            speak("Ok sir, call me up again if you want anythng from me")
             sys.exit()
+
+        # shutdown, restart the system
+        elif "shutdown the system" in query:
+            os.system("shutdown /s /t 5")
+
+        elif "restart the system" in query:
+            os.system("shutdown /r /t 5")
+
+        # elif "sleep the system":
+        #     os.system("rundell32.exe powrprof.dll,SetSuspendedState 0,1,0")
+
+        # to switch window
+        elif "switch the window" in query:
+            pyautogui.keyDown("alt")
+            pyautogui.press("tab")
+            time.sleep(1)
+            pyautogui.keyUp("alt")
+
+        # to tell news headline
+        elif "tell me news" in query:
+            speak("Please wait sir, fetching news headlines")
+            news()
 
         speak("Sir, do you have any other work")
