@@ -13,6 +13,8 @@ import sys
 import time
 import pyjokes
 import pyautogui
+import instaloader 
+import PyPDF2
 
 # provides an engine for speech function which helps in text to vice convertion
 # init function to get an engine instance for the speech synthesis
@@ -89,6 +91,20 @@ def news():
     for i in range(len(days)):
         speak(f"todays {days[i]} news is {head[i]}")  
 
+
+# reading pdf
+def pdf_reader():
+    # the file should be in the same folder as your program otherwise mention directory
+    book = open('py3.pdf', 'rb')
+    pdfreader = PyPDF2.PdfFileReader(book)
+    pages = pdfreader.numPages
+    speak(f"total no. of pages in teh book are{pages}")
+    # since in programming indexing starts with 0 so we'll have to say teh number+1
+    speak("Sir, please enter the page number that i have to read")
+    pg = takecommnad().lower()
+    page = pdfreader.getPage(pg)
+    text = page.extractText()
+    speak(text)
 
 
 if __name__ == '__main__':
@@ -249,7 +265,7 @@ if __name__ == '__main__':
             speak(joke)
 
         # terminating the Ai
-        elif "you can sleep" in query:
+        elif "sleep" in query:
             speak("Ok sir, call me up again if you want anythng from me")
             sys.exit()
 
@@ -275,4 +291,67 @@ if __name__ == '__main__':
             speak("Please wait sir, fetching news headlines")
             news()
 
+        # # getting location 
+        # elif "location" in query:
+        #     speak("wait a moment sir, let me check!!")
+        #     try:
+        #         ipad = get('https://api.ipify.org/').text
+        #         print(ipad)
+        #         url = 'https://get.geojs.io/v1/ip/geo/'+ipad+'.json'
+        #         # fetching data from teh abouve url regarding our location via ip address
+        #         geo_requests = requests.get(url)
+        #         # turning the data scrapped into a json fromat
+        #         geodata = geo_requests.json()
+        #         # print(geodata)
+        #         # accessing the data by their keys as it's in the dictionary 
+        #         city = geodata['city']
+        #         country = geodata['country']
+        #         speak(f"Sir, we're in {city} city of country {country}")
+        #     except Exception as e:
+        #         speak("sorry sir, due to network issues i'm not able to find our current location")
+
+        # to check instagram profile
+        elif "insta profile" in query:
+            speak("Sir, please enter the username of the profile you want to check")
+            name = input("Enter username here: ")
+            webbrowser.open(f"www.instagram.com/{name}")
+            speak(f"Sir, here is the instagram profile of username {name}")
+            time.sleep(4)
+            speak("Sir, would you like download the profile picture")
+            condition = takecommnad().lower()
+            if 'yes' in condition:
+                mod = instaloader.Instaloader()
+                mod.download_profile(name, profile_pic_only=True)
+                speak("Sir the pic is downloaded")
+
+        # to take screenshot
+        elif "take a screenshot" in query:
+            speak("Sir, please tell the name by which i should save this file")
+            name = takecommnad().lower()
+            speak("sir, please hold the screen for a minute")
+            time.sleep(3)
+            img = pyautogui.screenshot()
+            img.save(f"{name}.png")
+            speak("Sir, Screenshot taken")
+
+        # to read pdf
+        elif "read pdf" in query:
+            pdf_reader()
+
+        # to hide and unhide folders
+        elif "hide all folder" in query or "hide this folder" in query or "visible for everyone" in query:
+            speak("Sir, please tell do you want hide this folder or make it visible for everyone")
+            condition = takecommand().lower()
+            if "hide" in condition:
+                speak("working on a private project sir, huh!")
+                os.system("attrib +h /s /d") #os module
+                speak("sir folder has been noW under hidden state")
+            elif "visible" in condition:
+                speak("Alright Sir, making it available for everyone, I hope you are aware what you are doing right now!!")
+                os.system("attrib -h /s /d")
+                speak("the folder in now visible")
+            elif "leave it" in condition or "leave for now" in condition:
+                speak("Ok sir")
+
+    
         speak("Sir, do you have any other work")
