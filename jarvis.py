@@ -49,7 +49,7 @@ def takecommnad():
         return "none"
     return query
 
-
+   
 # Defining Wishme Function - This Function will make your Jarvis wish you according to system time.
 def wishme():
     hour = int(datetime.datetime.now().hour)  # this give you the current time
