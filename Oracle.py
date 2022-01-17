@@ -29,7 +29,7 @@ def speak(audio):
     print(audio)
     engine.runAndWait()
 
-
+ 
 # Defining Take command Function - This Function will allow your Jarvis to take microphone input from the user and
 # returns a string output.
 def takecommnad():
