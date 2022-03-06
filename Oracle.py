@@ -23,7 +23,7 @@ voices = engine.getProperty('voices')  # defined voices to take properties from 
 engine.setProperty('voices', voices[0].id)
 
 
-# Defining Speak Function - This Function will program your Jarvis to speak something.
+# Defining Speak Function - This Function will program your Jarvis to speak something.   
 def speak(audio):
     engine.say(audio)
     print(audio)
