@@ -2,7 +2,7 @@ import pyttsx3
 import speech_recognition as sr
 import datetime
 import os
-# import cv2
+# import cv2  
 import random
 from requests import get
 import wikipedia
